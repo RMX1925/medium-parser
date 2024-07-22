@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myapp/api/medium_api.dart';
@@ -59,12 +58,12 @@ class _ArticelViewState extends State<ArticelView> {
       twoButtons[0].remove();
     }
 
-    var font_sans = body?.getElementsByClassName("font-sans");
-    if (font_sans != null) {
-      var children = font_sans.first.children;
+    var fontSans = body?.getElementsByClassName("font-sans");
+    if (fontSans != null) {
+      var children = fontSans.first.children;
       children[0].remove();
     }
-    print("OUTER HTML: ${doc.outerHtml}");
+    debugPrint("OUTER HTML: ${doc.outerHtml}");
     return doc.outerHtml;
   }
 
