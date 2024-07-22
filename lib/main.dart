@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/screens/articel_view.dart';
 import 'package:myapp/screens/home_screen.dart';
+import 'package:myapp/theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
 }
-
-// void navigateToScreen(String link) {
-//   MyApp.navigatorKey.currentState?.pushNamed("/article", arguments: link);
-// }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -60,11 +57,9 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: _navigatorKey,
       title: 'Medium Bypasser',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
-      theme: ThemeData(
-        textTheme: GoogleFonts.dmSansTextTheme(),
-        primaryColor: Colors.black,
-      ),
+      themeMode: ThemeMode.system,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       initialRoute: "/",
       onGenerateRoute: (settings) {
         Widget currentWidget = HomeScreen();

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/modals/not_valid_data.dart';
 import 'package:myapp/screens/articel_view.dart';
 import 'package:myapp/screens/not_valid_screen.dart';
 
@@ -11,19 +12,22 @@ class HomeScreen extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
   void _showArticle(BuildContext context) {
-    if (_controller.text.isEmpty) {
+    if (_controller.text.isEmpty && !kDebugMode) {
       return;
     }
-    Navigator.of(context).push(CupertinoPageRoute(
+    Navigator.of(context).push(
+      CupertinoPageRoute(
         builder: (context) => ArticelView(
-              articleLink: _controller.text.trim(),
-            )));
+          articleLink: _controller.text.trim(),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -50,40 +54,42 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 child: TextField(
                   controller: _controller,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 2),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 2,
+                      ),
                       borderRadius: BorderRadius.all(Radius.circular(50)),
                     ),
                     hintText: 'paste your medium url here',
-                    
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 2),
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        _controller.text = "";
+                      },
+                      icon: const Icon(
+                        CupertinoIcons.clear_circled_solid,
+                      ),
                     ),
                   ),
                   textAlign: TextAlign.center,
                   onSubmitted: (value) {
                     _showArticle(context);
                   },
+                  onTap: () {},
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: MaterialButton(
-                    onPressed: () {
-                      _showArticle(context);
-                    },
-                    color: Colors.black,
-                    colorBrightness: Brightness.dark,
-                    padding: const EdgeInsets.all(20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Text("Read article"),
-                  ),
+                child: MaterialButton(
+                  onPressed: () {
+                    _showArticle(context);
+                  },
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white70,
+                  colorBrightness: Theme.of(context).brightness,
+                  padding: const EdgeInsets.all(20),
+                  child: const Text("Read article"),
                 ),
               ),
               const SizedBox(
@@ -92,20 +98,21 @@ class HomeScreen extends StatelessWidget {
               if (kDebugMode)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: MaterialButton(
-                      onPressed: () {
-                        openActivity(context);
-                      },
-                      colorBrightness: Brightness.light,
-                      padding: const EdgeInsets.all(20),
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(),
-                        borderRadius: BorderRadius.circular(50),
+                  child: MaterialButton(
+                    onPressed: () {
+                      openActivity(context);
+                    },
+                    padding: const EdgeInsets.all(20),
+                    colorBrightness: Theme.of(context).brightness,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white70,
                       ),
-                      child: const Text("Show not valid article"),
+                      borderRadius: BorderRadius.circular(50),
                     ),
+                    child: const Text("Show not valid article"),
                   ),
                 ),
             ],
@@ -116,7 +123,14 @@ class HomeScreen extends StatelessWidget {
   }
 
   void openActivity(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => NotValidScreen(url: _controller.text)));
+    var message =
+        NotValidMessage(title: "title", message: "message", url: "url");
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => NotValidScreen(
+          message: message,
+        ),
+      ),
+    );
   }
 }

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/modals/not_valid_data.dart';
 
 class NotValidScreen extends StatelessWidget {
   const NotValidScreen({
     super.key,
-    required this.url,
+    required this.message,
   });
 
-  final String url;
+  final NotValidMessage message;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Unable to open!",
+              message.title,
               style: GoogleFonts.libreBaskerville().copyWith(
                 fontSize: 40,
                 fontWeight: FontWeight.w500,
@@ -31,21 +31,23 @@ class NotValidScreen extends StatelessWidget {
               child: RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: 'The url',
+                  text: 'Given url : ',
                   children: [
                     TextSpan(
-                      text: ' $url ',
+                      text: ' ${message.url}\n',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const TextSpan(
-                      text: "is not valid. Please choose a valid medium url.",
+                    TextSpan(
+                      text: message.message,
                     ),
                   ],
                   style: GoogleFonts.dmSans().copyWith(
                     fontSize: 18,
-                    color: Colors.black,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white70,
                   ),
                 ),
               ),

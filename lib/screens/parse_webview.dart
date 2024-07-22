@@ -7,9 +7,11 @@ class ParseWebview extends StatefulWidget {
   const ParseWebview({
     super.key,
     required this.htmlString,
+    this.disableJavascript = false,
   });
 
   final String htmlString;
+  final bool disableJavascript;
 
   @override
   State<ParseWebview> createState() => _ParseWebviewState();
@@ -29,8 +31,12 @@ class _ParseWebviewState extends State<ParseWebview> {
       params = AndroidWebViewControllerCreationParams();
     }
 
+    var javascriptMode = widget.disableJavascript
+        ? JavaScriptMode.disabled
+        : JavaScriptMode.unrestricted;
+
     controller = WebViewController.fromPlatformCreationParams(params)
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setJavaScriptMode(javascriptMode)
       ..setBackgroundColor(Colors.white10)
       ..setUserAgent(
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")

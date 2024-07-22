@@ -2,11 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myapp/api/medium_api.dart';
+import 'package:myapp/modals/not_valid_data.dart';
+import 'package:myapp/modals/response_modal.dart';
+import 'package:myapp/screens/new_screen.dart';
 import 'package:myapp/screens/not_valid_screen.dart';
 import 'package:myapp/screens/parse_webview.dart';
 // ignore: unused_import, depend_on_referenced_packages
 import 'package:html/parser.dart';
 import 'package:myapp/utils/loading_widget.dart';
+import 'package:myapp/utils/medium_parser.dart';
+import 'package:myapp/utils/parse_response_code.dart';
 
 class ArticelView extends StatefulWidget {
   const ArticelView({
@@ -23,85 +28,29 @@ class ArticelView extends StatefulWidget {
 class _ArticelViewState extends State<ArticelView> {
   MediumApi api = MediumApi();
 
-  late Future<String?> article;
+  late Future<ResponseBody> article;
   String title = "";
 
-  Future<String?> getArticle() async {
-    var response = await api.getArticle(widget.articleLink);
+  Future<ResponseBody> getArticle() async {
+    return await api.getArticle(widget.articleLink);
 
-    if (response == null) {
-      return response;
-    }
+    // if (responseBody.statusCode != 200) {
+    //   // handle error
 
-    debugPrint("Got response");
+    //   return responseBody;
+    // }
 
-    response = getFilteredResponse(response);
-    return response;
+    // var response = responseBody.response;
+
+    // if (response.isEmpty) {
+    //   return null;
+    // }
+
+    // debugPrint("Got response");
+
+    // // response = getFilteredResponse(response);
+    // return response;
   }
-
-  String getFilteredResponse(String html) {
-    var doc = parse(html);
-    var body = doc.body;
-
-    var notification = body?.getElementsByClassName("notification-container");
-    if (notification != null) {
-      notification.first.remove();
-    }
-
-    var navigation = body?.getElementsByTagName("nav");
-    if (navigation != null) {
-      navigation.first.remove();
-    }
-
-    var twoButtons = body?.children;
-    if (twoButtons != null || twoButtons!.isNotEmpty) {
-      twoButtons[0].remove();
-    }
-
-    var fontSans = body?.getElementsByClassName("font-sans");
-    if (fontSans != null) {
-      var children = fontSans.first.children;
-      children[0].remove();
-    }
-    debugPrint("OUTER HTML: ${doc.outerHtml}");
-    return doc.outerHtml;
-  }
-
-  // Future<String?> getArticle() async {
-  //   var response = await api.getArticle(widget.articleLink);
-  //   debugPrint("True contains : ${widget.articleLink}");
-
-  //   if (response == null) {
-  //     return response;
-  //   }
-  //   if (kDebugMode) print("completed response");
-  //   String head = getHeadHTML(response);
-  //   String article = getArticleHTML(response);
-
-  //   String newHtml = '''
-  //     <html>
-  //       $head
-  //       <body>
-  //         $article
-  //       </body>
-  //     </html>
-  //   ''';
-  //   return newHtml;
-  // }
-
-  // String getHeadHTML(String response) {
-  //   return getSubStringWithTagName(response, "<head>", "</head>");
-  // }
-
-  // String getArticleHTML(String response) {
-  //   return getSubStringWithTagName(response, "<article", "</article>");
-  // }
-
-  // String getSubStringWithTagName(String response, String tagName,
-  //     [String? endTagName]) {
-  //   return response.substring(response.indexOf(tagName),
-  //       endTagName != null ? response.indexOf(endTagName) : null);
-  // }
 
   @override
   void initState() {
@@ -118,16 +67,32 @@ class _ArticelViewState extends State<ArticelView> {
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
       ),
-      body: FutureBuilder<String?>(
+      body: FutureBuilder<ResponseBody>(
         future: article,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return loadingView();
           } else if (snapshot.hasData && snapshot.data != null) {
-            var data = snapshot.data!;
-            return ParseWebview(htmlString: data);
+            var response = snapshot.data!;
+            if (response.statusCode == 200) {
+              return ParseWebview(
+                htmlString: response.response,
+                disableJavascript: response.disableJavascript,
+              );
+            } else {
+              var message = generateMessageForStatusCode(
+                  response.statusCode, widget.articleLink);
+              return NotValidScreen(message: message);
+            }
           } else {
-            return NotValidScreen(url: widget.articleLink);
+            var message = NotValidMessage(
+                title: "Unable to open!",
+                message:
+                    "The url ${widget.articleLink} is either invalid or we are unable to open this.",
+                url: widget.articleLink);
+            return NotValidScreen(
+              message: message,
+            );
           }
         },
       ),
