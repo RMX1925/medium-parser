@@ -9,39 +9,48 @@ The Medium Parser is a Flutter application designed to parse articles from Mediu
 - Efficiently process large amounts of data.
 - User-friendly interface with Flutter.
 
+## UI
+
+<div style="display: flex; justify-content: space-around;">
+    <img src="./images/homescreen.png" alt="Homescreen" width="200"/>
+    <img src="./images/article.png" alt="Article" width="200"/>
+</div>
+
 ## Installation
 
 To install and run the Medium Parser, follow these steps:
 
 1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/yourusername/medium-parser.git
-    cd medium-parser
-    ```
+   ```bash
+   git clone https://github.com/yourusername/medium-parser.git
+   cd medium-parser
+   ```
 
 2. **Install Flutter:**
 
-    Make sure you have Flutter installed. If not, follow the instructions [here](https://flutter.dev/docs/get-started/install).
+   Make sure you have Flutter installed. If not, follow the instructions [here](https://flutter.dev/docs/get-started/install).
 
 3. **Get dependencies:**
 
-    ```bash
-    flutter pub get
-    ```
+   ```bash
+   flutter pub get
+   ```
 
 4. **Run the application:**
 
-    ```bash
-    flutter run
-    ```
+   ```bash
+   flutter run
+   ```
 
 ## Usage
 
 1. **Add URLs:**
+
    - Open the app and enter the URLs of Medium articles you want to parse. Each URL should be added separately.
 
 2. **Run the parser:**
+
    - Click the parse button to extract the data from the provided URLs.
 
 3. **Output:**
