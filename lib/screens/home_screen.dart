@@ -34,6 +34,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Spacer(),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -115,6 +116,14 @@ class HomeScreen extends StatelessWidget {
                     child: const Text("Show not valid article"),
                   ),
                 ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "version 1.0.1",
+                  style: GoogleFonts.libreBaskerville(),
+                ),
+              )
             ],
           ),
         ),
