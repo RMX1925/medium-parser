@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -19,6 +20,8 @@ class ParseWebview extends StatefulWidget {
 
 class _ParseWebviewState extends State<ParseWebview> {
   late final WebViewController controller;
+
+  late Brightness brightness = Theme.of(context).brightness;
 
   @override
   void initState() {
@@ -61,6 +64,16 @@ class _ParseWebviewState extends State<ParseWebview> {
     // controller.runJavaScript(
     //   isDarkMode ? "changeTheme('devibeans');" : "changeTheme('a11y-light');",
     // );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var getBrightness = MediaQuery.of(context).platformBrightness;
+    if (getBrightness != brightness) {
+      _setWebViewTheme(getBrightness == Brightness.dark);
+      brightness = getBrightness;
+    }
   }
 
   @override
