@@ -6,7 +6,9 @@ class AppTheme {
     primarySwatch: blackColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: whiteColor,
-
+    appBarTheme: AppBarTheme(
+      backgroundColor: whiteColor,
+    ),
     inputDecorationTheme: const InputDecorationTheme(
       focusColor: Colors.black,
       focusedBorder: OutlineInputBorder(
@@ -38,10 +40,9 @@ class AppTheme {
     primarySwatch: whiteColor,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: blackColor,
-    // scaffoldBackgroundColor: Colors.black87,
-    // appBarTheme: AppBarTheme(
-    //   surfaceTintColor: whiteColor[500],
-    // ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: blackAccentColor,
+    ),
 
     inputDecorationTheme: const InputDecorationTheme(
       focusColor: Colors.white70,

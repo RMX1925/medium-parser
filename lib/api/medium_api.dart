@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/modals/response_modal.dart';
@@ -37,9 +35,13 @@ class MediumApi {
     // debugPrint(response.body);
 
     if (response.statusCode == 200) {
-      var htmlString = _getFilteredResponse(response.body);
+      var modifiedResponse =
+          response.body.replaceAll("androidstudio", "devibeans");
+      var htmlString = _getFilteredResponse(modifiedResponse);
       return ResponseBody(
-          response: htmlString, statusCode: response.statusCode);
+        response: htmlString,
+        statusCode: response.statusCode,
+      );
     } else {
       return ResponseBody(response: "", statusCode: response.statusCode);
     }
@@ -156,6 +158,7 @@ class MediumApi {
 
   String _getFilteredResponse(String html) {
     var doc = parse(html);
+
     var body = doc.body;
 
     var notification = body?.getElementsByClassName("notification-container");

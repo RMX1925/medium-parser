@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:myapp/modals/not_valid_data.dart';
 
 NotValidMessage generateMessageForStatusCode(int statusCode, String url) {

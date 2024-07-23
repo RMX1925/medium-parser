@@ -40,33 +40,33 @@ class _ParseWebviewState extends State<ParseWebview> {
       ..setBackgroundColor(Colors.white10)
       ..setUserAgent(
           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
-      ..loadHtmlString(widget.htmlString);
-    // ..runJavaScriptReturningResult('''
-    //   var notification = document.getElementsByClassName("notification-container").first;
-    //   notification.remove();
-    //   var notification = document.getElementsByClassName("font-sans").first;
-    //   notification.remove();
-    //   var nav = document.getElementsByTagName("nav").first;
-    //   nav.remove();
-    // ''');
+      ..loadHtmlString(widget.htmlString)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (url) {
+            _setWebViewTheme(Theme.of(context).brightness == Brightness.dark);
+          },
+        ),
+      )
+      ..setUserAgent("PostmanRuntime/7.40.0");
+  }
 
-    // controller.setNavigationDelegate(
-    //   NavigationDelegate(
-    //     onPageFinished: (url) async {
-    //       var result = await controller.runJavaScriptReturningResult('''
-    //         var notification = document.getElementsByClassName("notification-container")[0];
-    //         notification.remove();
-    //         var nav = document.getElementsByTagName("nav")[0];
-    //         nav.remove();
-    //       ''');
-    //       debugPrint("RESULT OF JAVASCRIPT : $result");
-    //     },
-    //   ),
+  void _setWebViewTheme(bool isDarkMode) {
+    debugPrint("changeTheme : isDarkMode $isDarkMode");
+    controller.runJavaScript(
+      isDarkMode
+          ? "document.documentElement.classList.add('dark');"
+          : "document.documentElement.classList.remove('dark');",
+    );
+    // controller.runJavaScript(
+    //   isDarkMode ? "changeTheme('devibeans');" : "changeTheme('a11y-light');",
     // );
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(controller: controller);
+    return WebViewWidget(
+      controller: controller,
+    );
   }
 }

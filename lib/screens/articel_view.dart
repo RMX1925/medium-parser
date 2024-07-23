@@ -4,13 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:myapp/api/medium_api.dart';
 import 'package:myapp/modals/not_valid_data.dart';
 import 'package:myapp/modals/response_modal.dart';
-import 'package:myapp/screens/new_screen.dart';
 import 'package:myapp/screens/not_valid_screen.dart';
 import 'package:myapp/screens/parse_webview.dart';
-// ignore: unused_import, depend_on_referenced_packages
-import 'package:html/parser.dart';
 import 'package:myapp/utils/loading_widget.dart';
-import 'package:myapp/utils/medium_parser.dart';
 import 'package:myapp/utils/parse_response_code.dart';
 
 class ArticelView extends StatefulWidget {
@@ -61,10 +57,7 @@ class _ArticelViewState extends State<ArticelView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CupertinoColors.white,
       appBar: AppBar(
-        forceMaterialTransparency: true,
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0,
       ),
       body: FutureBuilder<ResponseBody>(
@@ -75,9 +68,12 @@ class _ArticelViewState extends State<ArticelView> {
           } else if (snapshot.hasData && snapshot.data != null) {
             var response = snapshot.data!;
             if (response.statusCode == 200) {
-              return ParseWebview(
-                htmlString: response.response,
-                disableJavascript: response.disableJavascript,
+              return Theme(
+                data: Theme.of(context),
+                child: ParseWebview(
+                  htmlString: response.response,
+                  disableJavascript: response.disableJavascript,
+                ),
               );
             } else {
               var message = generateMessageForStatusCode(
