@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -48,6 +49,31 @@ class _ParseWebviewState extends State<ParseWebview> {
         NavigationDelegate(
           onPageFinished: (url) {
             _setWebViewTheme(Theme.of(context).brightness == Brightness.dark);
+          },
+          onNavigationRequest: (request) {
+            // WidgetsBinding.instance.addPostFrameCallback((duration) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text(
+                  "Redirect is not allowed",
+                  style: GoogleFonts.libreBaskerville(),
+                ),
+                content: const Text(
+                  "Redirects are prevented for anonymousity. Copy the link and try to open in your browser.",
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Ok"),
+                  ),
+                ],
+              ),
+            );
+            // });
+            return NavigationDecision.prevent;
           },
         ),
       )

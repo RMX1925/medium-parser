@@ -35,9 +35,7 @@ class MediumApi {
     // debugPrint(response.body);
 
     if (response.statusCode == 200) {
-      var modifiedResponse =
-          response.body.replaceAll("androidstudio", "devibeans");
-      var htmlString = _getFilteredResponse(modifiedResponse);
+      var htmlString = _getFilteredResponse(response.body);
       return ResponseBody(
         response: htmlString,
         statusCode: response.statusCode,
@@ -160,6 +158,7 @@ class MediumApi {
     var doc = parse(html);
 
     var body = doc.body;
+    debugPrint(body?.outerHtml);
 
     var notification = body?.getElementsByClassName("notification-container");
     if (notification != null) {
