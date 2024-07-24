@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/theme/app_color.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     primarySwatch: blackColor,
+    primaryColor: blackColor,
     brightness: Brightness.light,
     scaffoldBackgroundColor: whiteColor,
     appBarTheme: AppBarTheme(
       backgroundColor: whiteColor,
+      titleTextStyle:
+          GoogleFonts.libreBaskerville().copyWith(color: blackColor),
     ),
     inputDecorationTheme: const InputDecorationTheme(
       focusColor: Colors.black,
@@ -20,6 +24,7 @@ class AppTheme {
         ),
       ),
     ),
+    primaryTextTheme: GoogleFonts.libreBaskervilleTextTheme(),
     buttonTheme: ButtonThemeData(
       minWidth: double.infinity,
       buttonColor: Colors.black,
@@ -42,8 +47,9 @@ class AppTheme {
     scaffoldBackgroundColor: blackColor,
     appBarTheme: AppBarTheme(
       backgroundColor: blackAccentColor,
+      titleTextStyle: GoogleFonts.libreBaskerville(),
     ),
-
+    primaryTextTheme: GoogleFonts.libreBaskervilleTextTheme(),
     inputDecorationTheme: const InputDecorationTheme(
       focusColor: Colors.white70,
       focusedBorder: OutlineInputBorder(

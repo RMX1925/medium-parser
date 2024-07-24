@@ -4,6 +4,7 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/modals/response_modal.dart';
 import 'package:myapp/utils/parse_response_code.dart';
+import 'package:uuid/uuid.dart';
 
 class ApiURL {
   static String freedium = "https://freedium.vercel.app";
@@ -14,6 +15,7 @@ class ApiURL {
 }
 
 class MediumApi {
+  var uuid = const Uuid();
   Future<ResponseBody> _getArticleFromCFD(String url) async {
     if (kDebugMode) {
       url = ApiURL.testURL;
@@ -41,14 +43,17 @@ class MediumApi {
         statusCode: response.statusCode,
       );
     } else {
-      return ResponseBody(response: "", statusCode: response.statusCode);
+      return ResponseBody(
+        response: "",
+        statusCode: response.statusCode,
+      );
     }
   }
 
   Future<ResponseBody> _getArticleReadCache(String url) async {
     if (kDebugMode) {
       url = ApiURL.testURL;
-      print("This is from API: $url");
+      debugPrint("This is from API: $url");
     }
     var apiURL = ApiURL.readCache;
 
@@ -85,7 +90,10 @@ class MediumApi {
         disableJavascript: true,
       );
     } else {
-      return ResponseBody(response: "", statusCode: response.statusCode);
+      return ResponseBody(
+        response: "",
+        statusCode: response.statusCode,
+      );
     }
   }
 
@@ -105,7 +113,7 @@ class MediumApi {
       response = await _getArticleFreedium(url);
       debugPrint("From Freedium");
     }
-
+    response.url = url;
     return response;
   }
 
@@ -146,11 +154,16 @@ class MediumApi {
         ''';
       debugPrint(htmlString);
       return ResponseBody(
+        id: url.hashCode.toString(),
         response: htmlString,
         statusCode: response.statusCode,
       );
     } else {
-      return ResponseBody(response: "", statusCode: response.statusCode);
+      return ResponseBody(
+        id: url.hashCode.toString(),
+        response: "",
+        statusCode: response.statusCode,
+      );
     }
   }
 
@@ -180,7 +193,7 @@ class MediumApi {
       var children = fontSans.first.children;
       children[0].remove();
     }
-    debugPrint("OUTER HTML: ${doc.outerHtml}");
+
     return doc.outerHtml;
   }
 }

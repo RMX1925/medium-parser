@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/database/hive_storage.dart';
 import 'package:myapp/modals/not_valid_data.dart';
 import 'package:myapp/screens/articel_view.dart';
 import 'package:myapp/screens/not_valid_screen.dart';
+import 'package:myapp/screens/saved_article_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -34,7 +36,9 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(),
+              const Spacer(
+                flex: 2,
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -96,7 +100,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              if (kDebugMode)
+              if (kDebugMode) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: MaterialButton(
@@ -116,6 +120,53 @@ class HomeScreen extends StatelessWidget {
                     child: const Text("Show not valid article"),
                   ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: MaterialButton(
+                    onPressed: () {
+                      HiveStorage().deleteAllResponse();
+                    },
+                    padding: const EdgeInsets.all(20),
+                    colorBrightness: Theme.of(context).brightness,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white70,
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: const Text("Delete database"),
+                  ),
+                ),
+              ],
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: MaterialButton(
+                  onPressed: () {
+                    _openSavedView(context);
+                  },
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    side: BorderSide(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white70,
+                    ),
+                  ),
+                  child: Text(
+                    "Your saved article",
+                    style: GoogleFonts.libreBaskerville().copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -139,6 +190,14 @@ class HomeScreen extends StatelessWidget {
         builder: (context) => NotValidScreen(
           message: message,
         ),
+      ),
+    );
+  }
+
+  void _openSavedView(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const SaveArticle(),
       ),
     );
   }

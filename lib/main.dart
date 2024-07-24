@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:myapp/modals/response_modal.dart';
 import 'package:myapp/provider/theme_provider.dart';
 import 'package:myapp/screens/articel_view.dart';
 import 'package:myapp/screens/home_screen.dart';
 import 'package:myapp/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(ResponseBodyAdapter());
+  await Hive.openBox<ResponseBody>('database');
   runApp(
     MultiProvider(
       providers: [
@@ -65,7 +71,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: _navigatorKey,
       title: 'Medium Bypasser',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       initialRoute: "/",
