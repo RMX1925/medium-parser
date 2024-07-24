@@ -14,8 +14,49 @@ class ApiURL {
       "https://medium.com/@yasirquyoom/how-to-integrate-animated-google-maps-like-uber-lyft-didi-chuxing-ola-grab-and-yandex-taxi-8442bdf68755";
 }
 
+class ArticleModal {
+  final String title;
+  final String subtitle;
+  final String imageURL;
+
+  ArticleModal({
+    required this.title,
+    required this.subtitle,
+    required this.imageURL,
+  });
+}
+
 class MediumApi {
   var uuid = const Uuid();
+
+  Future<ArticleModal?> _getMediumArticle() async {
+    String url =
+        "https://medium.com/@haseeb35653/my-30-day-journey-of-drinking-coconut-water-every-morning-check-out-the-amazing-outcomes-549b36896f64";
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var doc = parse(response.body);
+      var metas = doc.getElementsByTagName("meta");
+      String title = "", description = "", url = "";
+
+      for (var meta in metas) {
+        if (meta.attributes['name'] == "og:title") {
+          title = meta.attributes['content'] ?? "";
+        } else if (meta.attributes['name'] == "description") {
+          description = meta.attributes['content'] ?? "";
+        } else if (meta.attributes['property'] == "og:image") {
+          debugPrint("HEre in the url tag");
+          url = meta.attributes['content'] ?? "";
+          debugPrint("HEre $url");
+        }
+      }
+
+      return ArticleModal(title: title, subtitle: description, imageURL: url);
+    } else {
+      debugPrint("Not good response : ${response.statusCode}");
+      return null;
+    }
+  }
+
   Future<ResponseBody> _getArticleFromCFD(String url) async {
     if (kDebugMode) {
       url = ApiURL.testURL;
@@ -103,6 +144,8 @@ class MediumApi {
       print("This is from API: $url");
     }
 
+    _getMediumArticle();
+
     var response = await _getArticleFromCFD(url);
     if (response.statusCode != 200) {
       response = await _getArticleReadCache(url);
@@ -113,8 +156,25 @@ class MediumApi {
       response = await _getArticleFreedium(url);
       debugPrint("From Freedium");
     }
-    response.url = url;
-    return response;
+
+    var articleInfo = await _getMediumArticle();
+    if (articleInfo == null) {
+      return ResponseBody(
+        id: url.hashCode.toString(),
+        response: response.response,
+        statusCode: response.statusCode,
+        disableJavascript: response.disableJavascript,
+      );
+    } else {
+      return ResponseBody(
+        id: url.hashCode.toString(),
+        title: articleInfo.title,
+        url: articleInfo.imageURL,
+        response: response.response,
+        statusCode: response.statusCode,
+        disableJavascript: response.disableJavascript,
+      );
+    }
   }
 
   Future<ResponseBody> _getArticleFreedium(String url) async {
@@ -152,15 +212,13 @@ class MediumApi {
             </body>
             </html>
         ''';
-      debugPrint(htmlString);
+
       return ResponseBody(
-        id: url.hashCode.toString(),
         response: htmlString,
         statusCode: response.statusCode,
       );
     } else {
       return ResponseBody(
-        id: url.hashCode.toString(),
         response: "",
         statusCode: response.statusCode,
       );
@@ -171,7 +229,6 @@ class MediumApi {
     var doc = parse(html);
 
     var body = doc.body;
-    debugPrint(body?.outerHtml);
 
     var notification = body?.getElementsByClassName("notification-container");
     if (notification != null) {

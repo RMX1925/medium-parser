@@ -4,7 +4,6 @@ import 'package:myapp/api/medium_api.dart';
 import 'package:myapp/database/hive_storage.dart';
 import 'package:myapp/modals/not_valid_data.dart';
 import 'package:myapp/modals/response_modal.dart';
-import 'package:myapp/provider/theme_provider.dart';
 import 'package:myapp/screens/not_valid_screen.dart';
 import 'package:myapp/screens/parse_webview.dart';
 import 'package:myapp/utils/loading_widget.dart';
@@ -40,6 +39,10 @@ class _ArticelViewState extends State<ArticelView> {
 
   bool isSaved = false;
 
+  bool isDarkTheme() {
+    return Brightness.dark == Theme.of(context).brightness;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +61,7 @@ class _ArticelViewState extends State<ArticelView> {
         elevation: 0,
         actions: [
           IconButton(
+            tooltip: "Bookmark",
             onPressed: () async {
               _saveOrDeleteResponse(context);
             },
@@ -67,19 +71,6 @@ class _ArticelViewState extends State<ArticelView> {
                   : Icons.bookmark_add_outlined,
             ),
           ),
-          // Consumer<ThemeProvider>(builder:
-          //     (BuildContext context, ThemeProvider value, Widget? child) {
-          //   return IconButton(
-          //     onPressed: () {
-          //       value.toggleTheme();
-          //     },
-          //     icon: Icon(
-          //       value.isDarkTheme(context)
-          //           ? Icons.dark_mode
-          //           : Icons.light_mode_outlined,
-          //     ),
-          //   );
-          // }),
         ],
       ),
       body: FutureBuilder<ResponseBody>(
@@ -142,7 +133,9 @@ class _ArticelViewState extends State<ArticelView> {
       return;
     }
     if (response.response.isNotEmpty) {
-      response.title = _getTitle(response.response) ?? "No Title";
+      if (response.title.isEmpty) {
+        response.title = _getTitle(response.response) ?? "No Title";
+      }
 
       await _storage.saveArticle(response);
       _isSaved(article);
