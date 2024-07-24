@@ -116,7 +116,7 @@ class _ArticelViewState extends State<ArticelView> {
 
   _isSaved(Future<ResponseBody> article) async {
     var response = await article;
-    if (_storage.isResponsePresent(response.url)) {
+    if (_storage.isResponsePresent(response.id)) {
       setState(() {
         isSaved = true;
       });
@@ -134,6 +134,7 @@ class _ArticelViewState extends State<ArticelView> {
 
   void _saveOrDeleteResponse(BuildContext context) async {
     var response = await article;
+    debugPrint("is saved: $isSaved");
     if (isSaved) {
       await _storage.deleteResponse(response.id);
       _isSaved(article);
@@ -144,8 +145,11 @@ class _ArticelViewState extends State<ArticelView> {
       response.title = _getTitle(response.response) ?? "No Title";
 
       await _storage.saveArticle(response);
-      showSnackbar(context, message: "Article saved to bookmark");
       _isSaved(article);
+      showSnackbar(
+        context,
+        message: "Article saved to bookmark",
+      );
     }
   }
 }

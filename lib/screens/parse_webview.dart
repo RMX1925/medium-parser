@@ -7,14 +7,16 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class ParseWebview extends StatefulWidget {
-  const ParseWebview({
+  ParseWebview({
     super.key,
     required this.htmlString,
     this.disableJavascript = false,
+    this.isDarkMode = false,
   });
 
   final String htmlString;
   final bool disableJavascript;
+  bool isDarkMode;
 
   @override
   State<ParseWebview> createState() => _ParseWebviewState();
@@ -89,9 +91,6 @@ class _ParseWebviewState extends State<ParseWebview> {
           ? "document.documentElement.classList.add('dark');"
           : "document.documentElement.classList.remove('dark');",
     );
-    // controller.runJavaScript(
-    //   isDarkMode ? "changeTheme('devibeans');" : "changeTheme('a11y-light');",
-    // );
   }
 
   @override
@@ -107,11 +106,6 @@ class _ParseWebviewState extends State<ParseWebview> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (BuildContext context, ThemeProvider value, Widget? child) {
-        _setWebViewTheme(value.isDarkTheme(context));
-        return WebViewWidget(controller: controller);
-      },
-    );
+    return WebViewWidget(controller: controller);
   }
 }

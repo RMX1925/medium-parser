@@ -12,6 +12,11 @@ class HiveStorage {
 
   Future<void> saveArticle(ResponseBody response) async {
     debugPrint("Save Response");
+    if (response.title.toLowerCase().contains("freedium")) {
+      debugPrint("True contains");
+      response.title = response.title.split("-").first;
+    }
+    debugPrint(response.title);
     await _box.put(response.id, response);
   }
 
