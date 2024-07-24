@@ -14,7 +14,7 @@ class ApiURL {
 }
 
 class MediumApi {
-  Future<ResponseBody> getArticleFromCFD(String url) async {
+  Future<ResponseBody> _getArticleFromCFD(String url) async {
     if (kDebugMode) {
       url = ApiURL.testURL;
       print("This is from API: $url");
@@ -45,7 +45,7 @@ class MediumApi {
     }
   }
 
-  Future<ResponseBody> getArticleReadCache(String url) async {
+  Future<ResponseBody> _getArticleReadCache(String url) async {
     if (kDebugMode) {
       url = ApiURL.testURL;
       print("This is from API: $url");
@@ -95,21 +95,21 @@ class MediumApi {
       print("This is from API: $url");
     }
 
-    var response = await getArticleFromCFD(url);
+    var response = await _getArticleFromCFD(url);
     if (response.statusCode != 200) {
-      response = await getArticleReadCache(url);
+      response = await _getArticleReadCache(url);
       debugPrint("From ReadCache");
     }
 
     if (response.statusCode != 200) {
-      response = await getArticleFreedium(url);
+      response = await _getArticleFreedium(url);
       debugPrint("From Freedium");
     }
 
     return response;
   }
 
-  Future<ResponseBody> getArticleFreedium(String url) async {
+  Future<ResponseBody> _getArticleFreedium(String url) async {
     if (kDebugMode) {
       url = ApiURL.testURL;
       print("This is from API: $url");

@@ -43,6 +43,7 @@ dependencies:
   google_fonts: ^6.2.1
   app_links: ^3.5.1
   html: ^0.15.4
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

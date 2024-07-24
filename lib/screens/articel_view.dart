@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:myapp/api/medium_api.dart';
 import 'package:myapp/modals/not_valid_data.dart';
 import 'package:myapp/modals/response_modal.dart';
+import 'package:myapp/provider/theme_provider.dart';
 import 'package:myapp/screens/not_valid_screen.dart';
 import 'package:myapp/screens/parse_webview.dart';
 import 'package:myapp/utils/loading_widget.dart';
 import 'package:myapp/utils/parse_response_code.dart';
+import 'package:provider/provider.dart';
 
 class ArticelView extends StatefulWidget {
   const ArticelView({
@@ -24,26 +26,10 @@ class _ArticelViewState extends State<ArticelView> {
 
   late Future<ResponseBody> article;
   String title = "";
+  bool isDarkMode = false;
 
   Future<ResponseBody> getArticle() async {
     return await api.getArticle(widget.articleLink);
-
-    // if (responseBody.statusCode != 200) {
-    //   // handle error
-
-    //   return responseBody;
-    // }
-
-    // var response = responseBody.response;
-
-    // if (response.isEmpty) {
-    //   return null;
-    // }
-
-    // debugPrint("Got response");
-
-    // // response = getFilteredResponse(response);
-    // return response;
   }
 
   @override
@@ -57,6 +43,23 @@ class _ArticelViewState extends State<ArticelView> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.bookmark_add_outlined),
+          ),
+          Consumer<ThemeProvider>(builder:
+              (BuildContext context, ThemeProvider value, Widget? child) {
+            return IconButton(
+              onPressed: () {
+                value.toggleTheme();
+              },
+              icon: Icon(
+                value.isDarkTheme ? Icons.dark_mode : Icons.light_mode_outlined,
+              ),
+            );
+          }),
+        ],
       ),
       body: FutureBuilder<ResponseBody>(
         future: article,
@@ -71,6 +74,7 @@ class _ArticelViewState extends State<ArticelView> {
                 child: ParseWebview(
                   htmlString: response.response,
                   disableJavascript: response.disableJavascript,
+                  isDarkMode: isDarkMode,
                 ),
               );
             } else {

@@ -44,3 +44,6 @@ app.*.map.json
 
 #Android apk
 *.apk
+
+# Webpage for medium parser
+webpage/

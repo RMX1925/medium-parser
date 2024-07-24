@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class ParseWebview extends StatefulWidget {
-  const ParseWebview({
+  ParseWebview({
     super.key,
     required this.htmlString,
     this.disableJavascript = false,
+    this.isDarkMode = false,
   });
 
   final String htmlString;
   final bool disableJavascript;
+  final bool isDarkMode;
 
   @override
   State<ParseWebview> createState() => _ParseWebviewState();
@@ -47,7 +51,8 @@ class _ParseWebviewState extends State<ParseWebview> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (url) {
-            _setWebViewTheme(Theme.of(context).brightness == Brightness.dark);
+            // _setWebViewTheme(Theme.of(context).brightness == Brightness.dark);
+            _setWebViewTheme(widget.isDarkMode);
           },
           onNavigationRequest: (request) {
             // WidgetsBinding.instance.addPostFrameCallback((duration) {
@@ -95,6 +100,7 @@ class _ParseWebviewState extends State<ParseWebview> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     var getBrightness = MediaQuery.of(context).platformBrightness;
+
     if (getBrightness != brightness) {
       _setWebViewTheme(getBrightness == Brightness.dark);
       brightness = getBrightness;
@@ -103,8 +109,11 @@ class _ParseWebviewState extends State<ParseWebview> {
 
   @override
   Widget build(BuildContext context) {
-    return WebViewWidget(
-      controller: controller,
+    return Consumer<ThemeProvider>(
+      builder: (BuildContext context, ThemeProvider value, Widget? child) {
+        _setWebViewTheme(value.isDarkTheme);
+        return WebViewWidget(controller: controller);
+      },
     );
   }
 }
