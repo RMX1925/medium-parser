@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/database/hive_storage.dart';
 import 'package:myapp/modals/response_modal.dart';
 import 'package:myapp/utils/parse_response_code.dart';
 import 'package:uuid/uuid.dart';
@@ -28,10 +29,9 @@ class ArticleModal {
 
 class MediumApi {
   var uuid = const Uuid();
+  HiveStorage _storage = HiveStorage();
 
-  Future<ArticleModal?> _getMediumArticle() async {
-    String url =
-        "https://medium.com/@haseeb35653/my-30-day-journey-of-drinking-coconut-water-every-morning-check-out-the-amazing-outcomes-549b36896f64";
+  Future<ArticleModal?> _getMediumArticle(String url) async {
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       var doc = parse(response.body);
@@ -58,11 +58,6 @@ class MediumApi {
   }
 
   Future<ResponseBody> _getArticleFromCFD(String url) async {
-    if (kDebugMode) {
-      url = ApiURL.testURL;
-      print("This is from API: $url");
-    }
-
     // vercel id : bom1::iad1::cnjj5-1721544910605-45897305edf1
 
     var headers = {
@@ -92,10 +87,6 @@ class MediumApi {
   }
 
   Future<ResponseBody> _getArticleReadCache(String url) async {
-    if (kDebugMode) {
-      url = ApiURL.testURL;
-      debugPrint("This is from API: $url");
-    }
     var apiURL = ApiURL.readCache;
 
     var body = jsonEncode({
@@ -139,12 +130,13 @@ class MediumApi {
   }
 
   Future<ResponseBody> getArticle(String url) async {
-    if (kDebugMode) {
-      url = ApiURL.testURL;
-      print("This is from API: $url");
+    // if (kDebugMode) {
+    //   url = ApiURL.testURL;
+    //   print("This is from API: $url");
+    // }
+    if (_storage.isResponsePresent(url.hashCode.toString())) {
+      return _storage.getResponse(url.hashCode.toString())!;
     }
-
-    _getMediumArticle();
 
     var response = await _getArticleFromCFD(url);
     if (response.statusCode != 200) {
@@ -157,10 +149,9 @@ class MediumApi {
       debugPrint("From Freedium");
     }
 
-    var articleInfo = await _getMediumArticle();
+    var articleInfo = await _getMediumArticle(url);
     if (articleInfo == null) {
       return ResponseBody(
-        id: url.hashCode.toString(),
         response: response.response,
         statusCode: response.statusCode,
         disableJavascript: response.disableJavascript,
@@ -170,6 +161,7 @@ class MediumApi {
         id: url.hashCode.toString(),
         title: articleInfo.title,
         url: articleInfo.imageURL,
+        description: articleInfo.subtitle,
         response: response.response,
         statusCode: response.statusCode,
         disableJavascript: response.disableJavascript,
@@ -178,10 +170,6 @@ class MediumApi {
   }
 
   Future<ResponseBody> _getArticleFreedium(String url) async {
-    if (kDebugMode) {
-      url = ApiURL.testURL;
-      print("This is from API: $url");
-    }
     var apiURL = "https://freedium.vercel.app";
 
     var body = jsonEncode({

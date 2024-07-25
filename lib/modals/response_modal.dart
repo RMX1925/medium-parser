@@ -21,10 +21,14 @@ class ResponseBody extends HiveObject {
   @HiveField(5)
   String url;
 
+  @HiveField(6)
+  String description;
+
   ResponseBody({
+    this.id = "",
     this.title = "",
     this.url = "",
-    this.id = "",
+    this.description = "",
     required this.response,
     required this.statusCode,
     this.disableJavascript = false,

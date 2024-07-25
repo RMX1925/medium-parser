@@ -155,15 +155,12 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     side: BorderSide(
                       color: Theme.of(context).brightness == Brightness.light
-                          ? Colors.black
+                          ? Colors.black87
                           : Colors.white70,
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "Your saved article",
-                    style: GoogleFonts.libreBaskerville().copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
                 ),
               ),
@@ -171,7 +168,7 @@ class HomeScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Text(
-                  "version 1.0.1",
+                  "version 1.0.2",
                   style: GoogleFonts.libreBaskerville(),
                 ),
               )

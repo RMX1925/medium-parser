@@ -9,7 +9,6 @@ import 'package:myapp/screens/parse_webview.dart';
 import 'package:myapp/utils/loading_widget.dart';
 import 'package:myapp/utils/parse_response_code.dart';
 import 'package:myapp/utils/show_snackbar.dart';
-import 'package:provider/provider.dart';
 
 class ArticelView extends StatefulWidget {
   ArticelView({

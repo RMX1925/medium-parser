@@ -17,8 +17,10 @@ class ResponseBodyAdapter extends TypeAdapter<ResponseBody> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ResponseBody(
-      title: fields[4] as String,
       id: fields[0] as String,
+      title: fields[4] as String,
+      url: fields[5] as String,
+      description: fields[6] as String,
       response: fields[1] as String,
       statusCode: fields[2] as int,
       disableJavascript: fields[3] as bool,
@@ -28,7 +30,7 @@ class ResponseBodyAdapter extends TypeAdapter<ResponseBody> {
   @override
   void write(BinaryWriter writer, ResponseBody obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class ResponseBodyAdapter extends TypeAdapter<ResponseBody> {
       ..writeByte(3)
       ..write(obj.disableJavascript)
       ..writeByte(4)
-      ..write(obj.title);
+      ..write(obj.title)
+      ..writeByte(5)
+      ..write(obj.url)
+      ..writeByte(6)
+      ..write(obj.description);
   }
 
   @override

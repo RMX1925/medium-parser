@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: _navigatorKey,
       title: 'Medium Bypasser',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.system,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       initialRoute: "/",
