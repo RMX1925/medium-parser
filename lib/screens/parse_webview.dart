@@ -5,7 +5,7 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class ParseWebview extends StatefulWidget {
-  ParseWebview({
+  const ParseWebview({
     super.key,
     required this.htmlString,
     this.disableJavascript = false,
@@ -14,7 +14,7 @@ class ParseWebview extends StatefulWidget {
 
   final String htmlString;
   final bool disableJavascript;
-  bool isDarkMode;
+  final bool isDarkMode;
 
   @override
   State<ParseWebview> createState() => _ParseWebviewState();
@@ -24,10 +24,13 @@ class _ParseWebviewState extends State<ParseWebview> {
   late final WebViewController controller;
 
   late Brightness brightness = Theme.of(context).brightness;
+  late bool isDarkMode;
 
   @override
   void initState() {
     super.initState();
+
+    isDarkMode = widget.isDarkMode;
 
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -49,7 +52,6 @@ class _ParseWebviewState extends State<ParseWebview> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageFinished: (url) {
-            // _setWebViewTheme(Theme.of(context).brightness == Brightness.dark);
             _setWebViewTheme(Theme.of(context).brightness == Brightness.dark);
           },
           onNavigationRequest: (request) {

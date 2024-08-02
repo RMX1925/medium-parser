@@ -29,7 +29,7 @@ class ArticleModal {
 
 class MediumApi {
   var uuid = const Uuid();
-  HiveStorage _storage = HiveStorage();
+  final HiveStorage _storage = HiveStorage();
 
   Future<ArticleModal?> _getMediumArticle(String url) async {
     var response = await http.get(Uri.parse(url));
@@ -130,10 +130,10 @@ class MediumApi {
   }
 
   Future<ResponseBody> getArticle(String url) async {
-    // if (kDebugMode) {
-    //   url = ApiURL.testURL;
-    //   print("This is from API: $url");
-    // }
+    if (kDebugMode) {
+      url = ApiURL.testURL;
+      print("This is from API: $url");
+    }
     if (_storage.isResponsePresent(url.hashCode.toString())) {
       return _storage.getResponse(url.hashCode.toString())!;
     }

@@ -165,11 +165,13 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  "version 1.0.2",
-                  style: GoogleFonts.libreBaskerville(),
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    "version 1.0.2",
+                    style: GoogleFonts.libreBaskerville(),
+                  ),
                 ),
               )
             ],

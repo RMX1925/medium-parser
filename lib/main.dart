@@ -6,7 +6,6 @@ import 'package:myapp/modals/response_modal.dart';
 import 'package:myapp/screens/articel_view.dart';
 import 'package:myapp/screens/home_screen.dart';
 import 'package:myapp/theme/app_theme.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

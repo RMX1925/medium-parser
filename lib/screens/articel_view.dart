@@ -11,14 +11,14 @@ import 'package:myapp/utils/parse_response_code.dart';
 import 'package:myapp/utils/show_snackbar.dart';
 
 class ArticelView extends StatefulWidget {
-  ArticelView({
+  const ArticelView({
     super.key,
     required this.articleLink,
     this.responseBody,
   });
 
   final String articleLink;
-  ResponseBody? responseBody;
+  final ResponseBody? responseBody;
 
   @override
   State<ArticelView> createState() => _ArticelViewState();
@@ -28,6 +28,7 @@ class _ArticelViewState extends State<ArticelView> {
   MediumApi api = MediumApi();
 
   late Future<ResponseBody> article;
+  late ResponseBody? responseBody;
   String title = "";
 
   Future<ResponseBody> getArticle() async {
@@ -45,8 +46,9 @@ class _ArticelViewState extends State<ArticelView> {
   @override
   void initState() {
     super.initState();
-    if (widget.responseBody != null) {
-      article = Future.value(widget.responseBody!);
+    responseBody = widget.responseBody;
+    if (responseBody != null) {
+      article = Future.value(responseBody!);
     } else {
       article = getArticle();
     }
@@ -128,7 +130,9 @@ class _ArticelViewState extends State<ArticelView> {
     if (isSaved) {
       await _storage.deleteResponse(response.id);
       _isSaved(article);
-      showSnackbar(context, message: "Article removed from bookmark");
+      if (context.mounted) {
+        showSnackbar(context, message: "Article removed from bookmark");
+      }
       return;
     }
     if (response.response.isNotEmpty) {
@@ -138,10 +142,12 @@ class _ArticelViewState extends State<ArticelView> {
 
       await _storage.saveArticle(response);
       _isSaved(article);
-      showSnackbar(
-        context,
-        message: "Article saved to bookmark",
-      );
+      if (context.mounted) {
+        showSnackbar(
+          context,
+          message: "Article saved to bookmark",
+        );
+      }
     }
   }
 }
