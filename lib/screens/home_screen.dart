@@ -169,7 +169,7 @@ class HomeScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Text(
-                    "version 1.0.2",
+                    "version 1.0.3",
                     style: GoogleFonts.libreBaskerville(),
                   ),
                 ),

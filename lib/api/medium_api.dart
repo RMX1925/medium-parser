@@ -142,7 +142,7 @@ class MediumApi {
 
   Future<ResponseBody> getArticle(String url) async {
     if (kDebugMode) {
-      // url = ApiURL.testURL;
+      url = ApiURL.testURL;
       print("This is from API: $url");
     }
     if (_storage.isResponsePresent(url.hashCode.toString())) {
