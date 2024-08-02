@@ -47,3 +47,5 @@ app.*.map.json
 
 # Webpage for medium parser
 webpage/
+
+*.env

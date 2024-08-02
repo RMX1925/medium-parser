@@ -47,10 +47,11 @@ class _ArticelViewState extends State<ArticelView> {
   void initState() {
     super.initState();
     responseBody = widget.responseBody;
-    if (responseBody != null) {
-      article = Future.value(responseBody!);
-    } else {
+    if (responseBody == null) {
       article = getArticle();
+      print(article);
+    } else {
+      article = Future.value(responseBody!);
     }
     _isSaved(article);
   }
@@ -80,6 +81,7 @@ class _ArticelViewState extends State<ArticelView> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return loadingView();
           } else if (snapshot.hasData && snapshot.data != null) {
+            print("Here is snapshot data: ${snapshot.data}");
             var response = snapshot.data!;
             if (response.statusCode == 200) {
               return ParseWebview(
@@ -93,10 +95,10 @@ class _ArticelViewState extends State<ArticelView> {
             }
           } else {
             var message = NotValidMessage(
-                title: "Unable to open!",
-                message:
-                    "The url ${widget.articleLink} is either invalid or we are unable to open this.",
-                url: widget.articleLink);
+              title: "Unable to open!",
+              message: "is either invalid or we are unable to open this.",
+              url: widget.articleLink,
+            );
             return NotValidScreen(
               message: message,
             );
